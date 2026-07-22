@@ -91,6 +91,34 @@ class BuildTopologyTest(unittest.TestCase):
         compiler = topology.build_stages["compiler"]
         self.assertEqual(compiler.type, "per-arch")
 
+    def test_stage_of_artifact(self):
+        """Test resolving artifact -> build stage via artifact_group."""
+        self.write_topology(
+            """
+            [build_stages.math-libs]
+            artifact_groups = ["math-libs"]
+
+            [artifact_groups.math-libs]
+
+            [artifacts.blas]
+            artifact_group = "math-libs"
+
+            [artifacts.rand]
+            artifact_group = "math-libs"
+
+            [artifacts.orphan]
+            artifact_group = "no-stage-group"
+        """
+        )
+
+        topology = BuildTopology(self.topology_path)
+        self.assertEqual(topology.stage_of_artifact("blas"), "math-libs")
+        self.assertEqual(topology.stage_of_artifact("rand"), "math-libs")
+        # Group exists on the artifact but no build stage owns it.
+        self.assertIsNone(topology.stage_of_artifact("orphan"))
+        # Unknown artifact.
+        self.assertIsNone(topology.stage_of_artifact("does-not-exist"))
+
     def test_parse_external_git_sources(self):
         """Test parsing external git sources in source sets."""
         self.write_topology(

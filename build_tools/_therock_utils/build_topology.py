@@ -286,6 +286,28 @@ class BuildTopology:
         """Get all artifacts belonging to a specific artifact group."""
         return [a for a in self.artifacts.values() if a.artifact_group == group_name]
 
+    def _group_to_stage(self) -> Dict[str, str]:
+        """Return { artifact_group -> build_stage }, cached after first use."""
+        cached = getattr(self, "_group_to_stage_cache", None)
+        if cached is None:
+            cached = {}
+            for stage_name, stage in self.build_stages.items():
+                for group_name in stage.artifact_groups:
+                    cached[group_name] = stage_name
+            self._group_to_stage_cache = cached
+        return cached
+
+    def stage_of_artifact(self, artifact_name: str) -> Optional[str]:
+        """Return the build stage that produces the given artifact, or None.
+
+        Resolves artifact -> artifact_group -> build_stage. Returns None if the
+        artifact is unknown or its group is not owned by any build stage.
+        """
+        artifact = self.artifacts.get(artifact_name)
+        if artifact is None or not artifact.artifact_group:
+            return None
+        return self._group_to_stage().get(artifact.artifact_group)
+
     def get_inbound_artifacts(self, build_stage: str) -> Set[str]:
         """
         Get all artifacts needed by a build stage from previous stages.

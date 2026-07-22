@@ -1,0 +1,663 @@
+{
+  "amd-comgr": {
+    "consumers": [
+      "amd-dbgapi",
+      "hip-clr",
+      "ocl-clr",
+      "rocgdb"
+    ]
+  },
+  "amd-dbgapi": {
+    "consumers": [
+      "rocgdb",
+      "rocr-debug-agent",
+      "rocr-debug-agent-tests"
+    ]
+  },
+  "amd-llvm": {
+    "consumers": [
+      "aqlprofile",
+      "hip-clr",
+      "hipcc",
+      "hipify",
+      "hrx",
+      "libhipcxx",
+      "ocl-clr",
+      "rocr-runtime"
+    ]
+  },
+  "amdsmi": {
+    "consumers": [
+      "rdc",
+      "rocprofiler-systems"
+    ]
+  },
+  "aqlprofile": {
+    "consumers": [
+      "rocprofiler-compute",
+      "rocprofiler-sdk",
+      "rocprofiler-systems"
+    ]
+  },
+  "composable_kernel": {
+    "consumers": [
+      "hiptensor"
+    ]
+  },
+  "hip-clr": {
+    "consumers": [
+      "aqlprofile",
+      "composable_kernel",
+      "hip-tests",
+      "hipblas",
+      "hipblas-common",
+      "hipblaslt",
+      "hipcub",
+      "hipdnn",
+      "hipdnn_integration_tests",
+      "hipfft",
+      "hipfile",
+      "hipinfo",
+      "hipkernelprovider",
+      "hiprand",
+      "hipsolver",
+      "hipsparse",
+      "hipsparselt",
+      "hiptensor",
+      "libhipcxx",
+      "miopen",
+      "rccl-tests",
+      "rocalution",
+      "rocblas",
+      "rocfft",
+      "rocprim",
+      "rocprim_tests",
+      "rocprofiler-compute",
+      "rocprofiler-sdk",
+      "rocprofiler-systems",
+      "rocr-debug-agent-tests",
+      "rocrand",
+      "rocroller",
+      "rocsolver",
+      "rocsparse",
+      "rocthrust",
+      "rocwmma"
+    ]
+  },
+  "hip-tests": {
+    "consumers": []
+  },
+  "hipblas": {
+    "consumers": [
+      "miopen"
+    ]
+  },
+  "hipblas-common": {
+    "consumers": [
+      "hipblas",
+      "hipblaslt",
+      "hipblasltprovider",
+      "miopen",
+      "rocblas"
+    ]
+  },
+  "hipblaslt": {
+    "consumers": [
+      "hipblasltprovider",
+      "miopen",
+      "rocblas"
+    ]
+  },
+  "hipblasltprovider": {
+    "consumers": []
+  },
+  "hipcc": {
+    "consumers": [
+      "hip-clr",
+      "libhipcxx"
+    ]
+  },
+  "hipcub": {
+    "consumers": []
+  },
+  "hipdnn": {
+    "consumers": [
+      "hipblasltprovider",
+      "hipdnn_integration_tests",
+      "hipdnn_samples",
+      "hipkernelprovider",
+      "miopenprovider"
+    ]
+  },
+  "hipdnn_integration_tests": {
+    "consumers": [
+      "hipblasltprovider",
+      "hipkernelprovider",
+      "miopenprovider"
+    ]
+  },
+  "hipdnn_samples": {
+    "consumers": []
+  },
+  "hipfft": {
+    "consumers": []
+  },
+  "hipfile": {
+    "consumers": []
+  },
+  "hipify": {
+    "consumers": [
+      "rccl-tests"
+    ]
+  },
+  "hipinfo": {
+    "consumers": []
+  },
+  "hipkernelprovider": {
+    "consumers": []
+  },
+  "hiprand": {
+    "consumers": [
+      "rocfft"
+    ]
+  },
+  "hipsolver": {
+    "consumers": []
+  },
+  "hipsparse": {
+    "consumers": [
+      "hipsparselt"
+    ]
+  },
+  "hipsparselt": {
+    "consumers": []
+  },
+  "hiptensor": {
+    "consumers": []
+  },
+  "hrx": {
+    "consumers": []
+  },
+  "libhipcxx": {
+    "consumers": []
+  },
+  "miopen": {
+    "consumers": [
+      "miopenprovider"
+    ]
+  },
+  "miopenprovider": {
+    "consumers": [
+      "hipdnn_samples"
+    ]
+  },
+  "mirage": {
+    "consumers": []
+  },
+  "mxdatagenerator": {
+    "consumers": [
+      "rocroller"
+    ]
+  },
+  "ocl-clr": {
+    "consumers": []
+  },
+  "ocl-icd": {
+    "consumers": [
+      "ocl-clr"
+    ]
+  },
+  "rccl": {
+    "consumers": [
+      "rccl-tests"
+    ]
+  },
+  "rccl-tests": {
+    "consumers": []
+  },
+  "rdc": {
+    "consumers": []
+  },
+  "rocalution": {
+    "consumers": []
+  },
+  "rocblas": {
+    "consumers": [
+      "hipblas",
+      "hipsolver",
+      "miopen",
+      "rocalution",
+      "rocsolver",
+      "rocsparse",
+      "rocwmma"
+    ]
+  },
+  "rocdecode": {
+    "consumers": []
+  },
+  "rocfft": {
+    "consumers": [
+      "hipfft"
+    ]
+  },
+  "rocgdb": {
+    "consumers": []
+  },
+  "rocjitsu": {
+    "consumers": []
+  },
+  "rocjpeg": {
+    "consumers": []
+  },
+  "rocm-cmake": {
+    "consumers": [
+      "composable_kernel",
+      "hip-clr",
+      "hip-tests",
+      "hipblas",
+      "hipblas-common",
+      "hipblaslt",
+      "hipcc",
+      "hipcub",
+      "hipfft",
+      "hipfile",
+      "hipify",
+      "hiprand",
+      "hipsolver",
+      "hipsparse",
+      "hipsparselt",
+      "hiptensor",
+      "libhipcxx",
+      "miopen",
+      "ocl-clr",
+      "rccl-tests",
+      "rocalution",
+      "rocblas",
+      "rocfft",
+      "rocprim",
+      "rocprim_tests",
+      "rocrand",
+      "rocroller",
+      "rocsolver",
+      "rocsparse",
+      "rocthrust",
+      "rocwmma"
+    ]
+  },
+  "rocm-core": {
+    "consumers": [
+      "amdsmi",
+      "ocl-clr"
+    ]
+  },
+  "rocm-half": {
+    "consumers": [
+      "composable_kernel",
+      "miopen"
+    ]
+  },
+  "rocm-kpack": {
+    "consumers": []
+  },
+  "rocm_smi_lib": {
+    "consumers": []
+  },
+  "rocminfo": {
+    "consumers": []
+  },
+  "rocprim": {
+    "consumers": [
+      "hipcub",
+      "rocalution",
+      "rocprim_tests",
+      "rocsolver",
+      "rocsparse",
+      "rocthrust"
+    ]
+  },
+  "rocprim_tests": {
+    "consumers": []
+  },
+  "rocprof-trace-decoder": {
+    "consumers": [
+      "rocprofiler-sdk"
+    ]
+  },
+  "rocprofiler-compute": {
+    "consumers": []
+  },
+  "rocprofiler-register": {
+    "consumers": [
+      "rocdecode",
+      "rocjpeg",
+      "rocprofiler-compute",
+      "rocprofiler-sdk",
+      "rocprofiler-systems",
+      "rocrtst"
+    ]
+  },
+  "rocprofiler-sdk": {
+    "consumers": [
+      "rdc",
+      "rocprofiler-compute",
+      "rocprofiler-systems"
+    ]
+  },
+  "rocprofiler-systems": {
+    "consumers": [
+      "rocprofiler-systems-examples"
+    ]
+  },
+  "rocprofiler-systems-examples": {
+    "consumers": []
+  },
+  "rocr-debug-agent": {
+    "consumers": [
+      "rocr-debug-agent-tests"
+    ]
+  },
+  "rocr-debug-agent-tests": {
+    "consumers": []
+  },
+  "rocr-runtime": {
+    "consumers": [
+      "aqlprofile",
+      "hrx",
+      "rdc",
+      "rocminfo",
+      "rocr-debug-agent",
+      "rocr-debug-agent-tests",
+      "rocrtst"
+    ]
+  },
+  "rocrand": {
+    "consumers": [
+      "composable_kernel",
+      "hiprand",
+      "miopen",
+      "rocalution",
+      "rocthrust"
+    ]
+  },
+  "rocroller": {
+    "consumers": []
+  },
+  "rocrtst": {
+    "consumers": []
+  },
+  "rocshmem": {
+    "consumers": []
+  },
+  "rocsolver": {
+    "consumers": [
+      "hipsolver"
+    ]
+  },
+  "rocsparse": {
+    "consumers": [
+      "hipsolver",
+      "hipsparse",
+      "hipsparselt",
+      "rocalution"
+    ]
+  },
+  "rocthrust": {
+    "consumers": []
+  },
+  "roctracer": {
+    "consumers": []
+  },
+  "rocwmma": {
+    "consumers": []
+  },
+  "therock-amd-mesa": {
+    "consumers": []
+  },
+  "therock-aux-overlay": {
+    "consumers": []
+  },
+  "therock-boost": {
+    "consumers": [
+      "hip-tests",
+      "hipfft",
+      "rocfft",
+      "rocroller"
+    ]
+  },
+  "therock-bzip2": {
+    "consumers": [
+      "therock-elfutils"
+    ]
+  },
+  "therock-catch2": {
+    "consumers": [
+      "hip-tests",
+      "hrx",
+      "rocroller"
+    ]
+  },
+  "therock-eigen": {
+    "consumers": [
+      "miopen",
+      "therock-frugally-deep"
+    ]
+  },
+  "therock-elfio": {
+    "consumers": []
+  },
+  "therock-elfutils": {
+    "consumers": []
+  },
+  "therock-expat": {
+    "consumers": []
+  },
+  "therock-fftw3": {
+    "consumers": [
+      "hipfft",
+      "rocfft"
+    ]
+  },
+  "therock-fftw3f": {
+    "consumers": [
+      "hipfft",
+      "rocfft"
+    ]
+  },
+  "therock-flatbuffers": {
+    "consumers": [
+      "hipblasltprovider",
+      "hipdnn",
+      "hipdnn_integration_tests",
+      "hipdnn_samples",
+      "hipkernelprovider",
+      "miopenprovider"
+    ]
+  },
+  "therock-fmt": {
+    "consumers": [
+      "hipdnn",
+      "rocprofiler-systems",
+      "rocroller",
+      "rocsolver",
+      "therock-spdlog",
+      "therock-yaml-cpp"
+    ]
+  },
+  "therock-frugally-deep": {
+    "consumers": [
+      "miopen"
+    ]
+  },
+  "therock-functionalplus": {
+    "consumers": [
+      "miopen",
+      "therock-frugally-deep"
+    ]
+  },
+  "therock-gmp": {
+    "consumers": [
+      "therock-mpfr"
+    ]
+  },
+  "therock-googletest": {
+    "consumers": [
+      "amdsmi",
+      "aqlprofile",
+      "hipblas",
+      "hipblaslt",
+      "hipblasltprovider",
+      "hipcub",
+      "hipdnn",
+      "hipdnn_integration_tests",
+      "hipfft",
+      "hipfile",
+      "hipkernelprovider",
+      "hiprand",
+      "hipsolver",
+      "hipsparse",
+      "hipsparselt",
+      "hiptensor",
+      "miopen",
+      "miopenprovider",
+      "mxdatagenerator",
+      "rocalution",
+      "rocblas",
+      "rocfft",
+      "rocprim_tests",
+      "rocrand",
+      "rocroller",
+      "rocsolver",
+      "rocsparse",
+      "rocthrust",
+      "rocwmma"
+    ]
+  },
+  "therock-grpc": {
+    "consumers": [
+      "rdc"
+    ]
+  },
+  "therock-host-blas": {
+    "consumers": [
+      "hipblaslt",
+      "hipsparselt",
+      "rocroller",
+      "therock-suitesparse"
+    ]
+  },
+  "therock-host-blas64": {
+    "consumers": []
+  },
+  "therock-hwloc": {
+    "consumers": []
+  },
+  "therock-libbacktrace": {
+    "consumers": []
+  },
+  "therock-libcap": {
+    "consumers": []
+  },
+  "therock-libdivide": {
+    "consumers": [
+      "rocroller"
+    ]
+  },
+  "therock-libdrm": {
+    "consumers": [
+      "therock-amd-mesa"
+    ]
+  },
+  "therock-liblzma": {
+    "consumers": [
+      "therock-elfutils"
+    ]
+  },
+  "therock-libmnl": {
+    "consumers": []
+  },
+  "therock-libnl": {
+    "consumers": []
+  },
+  "therock-libpciaccess": {
+    "consumers": [
+      "therock-hwloc"
+    ]
+  },
+  "therock-mpfr": {
+    "consumers": []
+  },
+  "therock-msgpack-cxx": {
+    "consumers": [
+      "hipblaslt",
+      "hipsparselt",
+      "rocblas",
+      "rocm-kpack",
+      "rocroller"
+    ]
+  },
+  "therock-ncurses": {
+    "consumers": []
+  },
+  "therock-nlohmann-json": {
+    "consumers": [
+      "hipblasltprovider",
+      "hipdnn",
+      "hipdnn_integration_tests",
+      "hipdnn_samples",
+      "hipkernelprovider",
+      "miopen",
+      "miopenprovider",
+      "therock-frugally-deep"
+    ]
+  },
+  "therock-numactl": {
+    "consumers": [
+      "therock-hwloc"
+    ]
+  },
+  "therock-openmpi": {
+    "consumers": []
+  },
+  "therock-simde": {
+    "consumers": [
+      "hip-clr",
+      "ocl-clr",
+      "rocr-runtime"
+    ]
+  },
+  "therock-spdlog": {
+    "consumers": [
+      "hipdnn",
+      "rocprofiler-systems",
+      "rocroller"
+    ]
+  },
+  "therock-sqlite3": {
+    "consumers": []
+  },
+  "therock-suitesparse": {
+    "consumers": []
+  },
+  "therock-util-linux": {
+    "consumers": []
+  },
+  "therock-wsl-rocdxg": {
+    "consumers": []
+  },
+  "therock-yaml-cpp": {
+    "consumers": [
+      "rocprofiler-sdk",
+      "rocroller"
+    ]
+  },
+  "therock-zlib": {
+    "consumers": [
+      "therock-elfutils"
+    ]
+  },
+  "therock-zstd": {
+    "consumers": [
+      "therock-elfutils"
+    ]
+  }
+}

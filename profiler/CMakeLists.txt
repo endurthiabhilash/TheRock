@@ -32,7 +32,6 @@ if(THEROCK_ENABLE_ROCPROFV3)
     EXTERNAL_SOURCE_DIR "${THEROCK_ROCM_SYSTEMS_SOURCE_DIR}/projects/rocprof-trace-decoder"
     BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/rocprof-trace-decoder"
     BACKGROUND_BUILD
-    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_provide_package(rocprof-trace-decoder rocprof-trace-decoder lib/cmake/rocprof-trace-decoder)
   therock_cmake_subproject_activate(rocprof-trace-decoder)
@@ -63,7 +62,6 @@ if(THEROCK_ENABLE_ROCPROFV3)
       hip-clr
       amd-llvm
       ROCR-Runtime
-    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(aqlprofile
     SUBDIRS .
@@ -148,17 +146,6 @@ if(THEROCK_ENABLE_ROCPROFV3)
     INTERFACE_INSTALL_RPATH_DIRS
       lib
       lib/rocm_sysdeps/lib
-    TEST_SUBPROJECTS
-      hipBLAS
-      hipBLASLt
-      hipFFT
-      MIOpen
-      rccl
-      rdc
-      rocBLAS
-      rocFFT
-      rocprofiler-compute
-      rocprofiler-systems
   )
   therock_cmake_subproject_glob_c_sources(rocprofiler-sdk
     SUBDIRS .
@@ -213,7 +200,6 @@ if(THEROCK_ENABLE_ROCPROFV3)
     RUNTIME_DEPS
       hip-clr
       ROCR-Runtime
-    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(roctracer
     SUBDIRS .
@@ -275,7 +261,6 @@ if(THEROCK_ENABLE_ROCPROFILER_COMPUTE)
       ${THEROCK_BUNDLED_LIBDRM}
       ${THEROCK_BUNDLED_SQLITE3}
       ${_openmpi_optional_dep}
-    TEST_SUBPROJECTS
     )
     therock_cmake_subproject_glob_c_sources(rocprofiler-compute
       SUBDIRS .
@@ -368,7 +353,6 @@ if(THEROCK_ENABLE_ROCPROFSYS)
       ${THEROCK_BUNDLED_LIBDRM}
       ${THEROCK_BUNDLED_SQLITE3}
       ${_openmpi_optional_dep}
-    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(rocprofiler-systems
     SUBDIRS .
