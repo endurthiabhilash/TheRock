@@ -91,6 +91,7 @@ def _load_overrides(therock_dir: Path) -> dict:
         normalized[key.lower()] = {
             "include": [c.lower() for c in entry.get("include", [])],
             "exclude": [c.lower() for c in entry.get("exclude", [])],
+            "fanout_all_consumers": bool(entry.get("fanout_all_consumers", False)),
         }
     return normalized
 
@@ -206,12 +207,25 @@ def get_subprojects_to_test(
     for proj in changed_lower:
         entry = graph.get(proj, {})
         consumers = entry.get("consumers", [])
+
+        # Foundational fan-out: a project flagged fanout_all_consumers in the
+        # overrides file selects ALL its graph consumers, bypassing the
+        # same-stage cut. This is the opt-in for stage-less foundational deps
+        # (rocm-cmake, rocm-core, ...) whose consumers span every stage and
+        # would otherwise be selected by nothing. It must stay explicit per
+        # project: blanket-fanning every stage-less project would re-expand
+        # universal deps (hip-clr, therock-googletest) into the whole test tree.
+        if overrides.get(proj, {}).get("fanout_all_consumers"):
+            result.update(consumers)
+            continue
+
         proj_stage = stage_of.get(proj)
 
         # A stage-less project (proj_stage is None: foundational deps like
         # rocm-core/rocm-cmake with no artifact-*.toml) selects no consumers via
-        # the same-stage cut; its dependents are covered by explicit include
-        # entries in test_subprojects_overrides.json instead.
+        # the same-stage cut; its dependents are covered by an explicit
+        # fanout_all_consumers flag or include entries in
+        # test_subprojects_overrides.json instead.
         for consumer in consumers:
             # Same-stage consumers only.  Cross-stage deps (ROCR-Runtime,
             # hip-clr, compiler) would pull in the whole test tree; specific

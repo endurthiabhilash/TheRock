@@ -1,8 +1,9 @@
 {
   "_comment": "Explicit test-selection overrides layered on top of the automatic consumer graph. Keys and values are matched case-insensitively.",
   "_schema": {
-    "include": "Subprojects to add that cannot be derived as same-stage consumers from RUNTIME_DEPS/BUILD_DEPS. Covers: (a) test-only projects with no link-time dep edge (e.g. hip-tests, rocgdb-cpu), (b) same-stage reverse edges not present as forward consumers, and (c) foundational deps that have no derivable build stage (rocm-core, rocm-cmake, ...), whose consumers must be listed explicitly because the same-stage cut selects nothing for them.",
-    "exclude": "Subprojects to remove even though they appear as consumers in the graph (e.g. to avoid expensive suites for low-risk changes).",
+    "include": "Subprojects to add that cannot be derived as same-stage consumers from RUNTIME_DEPS/BUILD_DEPS. Covers: (a) test-only projects with no link-time dep edge (e.g. hip-tests, rocgdb-cpu), and (b) same-stage reverse edges not present as forward consumers.",
+    "exclude": "Subprojects to remove even though they appear as consumers in the graph (e.g. to avoid expensive suites for low-risk changes). Applied after include AND after fanout_all_consumers, so it can prune a specific consumer from a fanned-out foundational dep.",
+    "fanout_all_consumers": "Boolean. When true, a change to this project selects ALL of its graph consumers, bypassing the same-stage cut. This is the opt-in for foundational deps that have no derivable build stage (rocm-core, rocm-cmake, ...) whose consumers span every stage; the same-stage cut would otherwise select nothing for them. The consumer names are read live from therock_consumer_graph.json, so they stay in sync automatically as the graph changes. Must stay explicit per project: blanket-fanning every stage-less project would re-expand universal deps (hip-clr, therock-googletest) into the whole test tree.",
     "_note_cross_stage": "Cross-stage 'universal' consumers of hip-clr / ROCR-Runtime (~28 each) are intentionally NOT enumerated here. A change to those triggers a broad rebuild; enumerating their consumers would recreate the whole-tree test explosion the bounded same-stage design exists to prevent."
   },
 
@@ -39,15 +40,7 @@
 
   "rocprofiler-sdk": {
     "include": [
-      "rocprofiler-compute",
       "rocprofiler-systems",
-      "rocprofiler-systems-examples"
-    ],
-    "exclude": []
-  },
-
-  "rocprofiler-systems": {
-    "include": [
       "rocprofiler-systems-examples"
     ],
     "exclude": []
@@ -63,11 +56,8 @@
 
   "amd-dbgapi": {
     "include": [
-      "rocgdb",
       "rocgdb-cpu",
-      "rocgdb-gpu",
-      "rocr-debug-agent",
-      "rocr-debug-agent-tests"
+      "rocgdb-gpu"
     ],
     "exclude": []
   },
@@ -76,13 +66,6 @@
     "include": [
       "rocgdb-cpu",
       "rocgdb-gpu"
-    ],
-    "exclude": []
-  },
-
-  "rocr-debug-agent": {
-    "include": [
-      "rocr-debug-agent-tests"
     ],
     "exclude": []
   },
@@ -130,67 +113,22 @@
   },
 
   "rocm-core": {
-    "include": [
-      "amdsmi",
-      "ocl-clr"
-    ],
+    "fanout_all_consumers": true,
     "exclude": []
   },
 
   "rocm-cmake": {
-    "include": [
-      "composable_kernel",
-      "hip-clr",
-      "hip-tests",
-      "hipblas",
-      "hipblas-common",
-      "hipblaslt",
-      "hipcc",
-      "hipcub",
-      "hipfft",
-      "hipfile",
-      "hipify",
-      "hiprand",
-      "hipsolver",
-      "hipsparse",
-      "hipsparselt",
-      "hiptensor",
-      "libhipcxx",
-      "miopen",
-      "ocl-clr",
-      "rccl-tests",
-      "rocalution",
-      "rocblas",
-      "rocfft",
-      "rocprim",
-      "rocprim_tests",
-      "rocrand",
-      "rocroller",
-      "rocsolver",
-      "rocsparse",
-      "rocthrust",
-      "rocwmma"
-    ],
+    "fanout_all_consumers": true,
     "exclude": []
   },
 
   "rocm-half": {
-    "include": [
-      "composable_kernel",
-      "miopen"
-    ],
+    "fanout_all_consumers": true,
     "exclude": []
   },
 
   "rocprofiler-register": {
-    "include": [
-      "rocdecode",
-      "rocjpeg",
-      "rocprofiler-compute",
-      "rocprofiler-sdk",
-      "rocprofiler-systems",
-      "rocrtst"
-    ],
+    "fanout_all_consumers": true,
     "exclude": []
   }
 }

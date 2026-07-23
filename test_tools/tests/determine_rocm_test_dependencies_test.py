@@ -40,6 +40,10 @@ _MINI_GRAPH = {
     "rocr-debug-agent": {"consumers": ["rocr-debug-agent-tests"]},
     "rocr-debug-agent-tests": {"consumers": []},
     "rocgdb": {"consumers": []},
+    # Stage-less foundational dep whose consumers span BOTH stages. Used to
+    # exercise fanout_all_consumers (must select cross-stage consumers that the
+    # same-stage cut would drop).
+    "mini-foundation": {"consumers": ["rocblas", "rocgdb"]},
 }
 
 # The subproject -> build-stage mapping is derived from committed files
@@ -215,6 +219,35 @@ class TestConsumerGraph(unittest.TestCase):
         result = get_subprojects_to_test(["rocm-core"], self.tmp)
         self.assertIn("amdsmi", result)
         self.assertIn("ocl-clr", result)
+
+    def test_fanout_selects_all_consumers_cross_stage(self):
+        # fanout_all_consumers on a stage-less foundational dep selects ALL its
+        # graph consumers, including cross-stage ones the same-stage cut drops.
+        # mini-foundation -> [rocblas (math-libs), rocgdb (debug-tools)].
+        overrides_file = self.tmp / "test_tools" / "test_subprojects_overrides.json"
+        overrides_file.write_text(
+            json.dumps({"mini-foundation": {"fanout_all_consumers": True}})
+        )
+        result = get_subprojects_to_test(["mini-foundation"], self.tmp)
+        self.assertEqual(result, {"mini-foundation", "rocblas", "rocgdb"})
+
+    def test_fanout_honors_exclude(self):
+        # exclude is applied after fanout, so it can prune a specific consumer
+        # from a fanned-out foundational dep.
+        overrides_file = self.tmp / "test_tools" / "test_subprojects_overrides.json"
+        overrides_file.write_text(
+            json.dumps(
+                {
+                    "mini-foundation": {
+                        "fanout_all_consumers": True,
+                        "exclude": ["rocgdb"],
+                    }
+                }
+            )
+        )
+        result = get_subprojects_to_test(["mini-foundation"], self.tmp)
+        self.assertIn("rocblas", result)
+        self.assertNotIn("rocgdb", result)
 
     def test_exclude_order_independent_multi_project(self):
         # Regression for finding #7: when multiple projects change, an exclude
