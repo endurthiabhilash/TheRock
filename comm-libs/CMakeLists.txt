@@ -95,6 +95,7 @@ if(THEROCK_ENABLE_RCCL)
         hipify
         rccl
         ${_rccl_tests_optional_deps}
+      TEST_SUBPROJECTS
     )
     therock_cmake_subproject_glob_c_sources(rccl-tests
       SUBDIRS
@@ -180,6 +181,7 @@ if(THEROCK_ENABLE_ROCSHMEM)
       hip-clr
       ${THEROCK_BUNDLED_NUMACTL}
       ${_rocshmem_optional_runtime_deps}
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(rocshmem
     SUBDIRS

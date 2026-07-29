@@ -416,6 +416,7 @@ if(THEROCK_ENABLE_ROCPROFSYS)
         "lib/llvm/lib"
       RUNTIME_DEPS
         rocprofiler-systems
+      TEST_SUBPROJECTS
     )
     therock_cmake_subproject_glob_c_sources(rocprofiler-systems-examples
       SUBDIRS .

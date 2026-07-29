@@ -490,6 +490,7 @@ if(THEROCK_ENABLE_ROCALUTION)
       rocBLAS
       rocSPARSE
       rocRAND
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(rocALUTION
     SUBDIRS
@@ -627,6 +628,7 @@ if(_ck_enabled)
       rocRAND
       ${THEROCK_BUNDLED_BZIP2}
       ${optional_profiler_deps}
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_provide_package(composable_kernel composable_kernel lib/cmake/composable_kernel)
 
@@ -670,6 +672,7 @@ if(_ck_enabled AND THEROCK_ENABLE_HIPTENSOR)
       composable_kernel
     RUNTIME_DEPS
       hip-clr
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(hipTensor
     SUBDIRS
@@ -725,6 +728,7 @@ if(THEROCK_ENABLE_HIPTHREADS)
     RUNTIME_DEPS
       hip-clr
       hipcc
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(hipthreads
     SUBDIRS

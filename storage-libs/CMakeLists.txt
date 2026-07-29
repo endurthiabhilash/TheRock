@@ -31,6 +31,7 @@ if(THEROCK_ENABLE_HIPFILE)
     RUNTIME_DEPS
       hip-clr
       ${THEROCK_BUNDLED_UTIL_LINUX}
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(hipfile
     SUBDIRS

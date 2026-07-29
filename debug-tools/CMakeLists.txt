@@ -225,6 +225,7 @@ if(THEROCK_ENABLE_ROCR_DEBUG_AGENT_TESTS)
         rocr-debug-agent
         ROCR-Runtime
         ${THEROCK_BUNDLED_ELFUTILS}
+      TEST_SUBPROJECTS
     )
 
     therock_cmake_subproject_glob_c_sources(rocr-debug-agent-tests SUBDIRS

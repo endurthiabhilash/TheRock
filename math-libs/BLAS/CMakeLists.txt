@@ -31,6 +31,7 @@ BUILD_DEPS
   rocm-cmake
 RUNTIME_DEPS
   hip-clr
+TEST_SUBPROJECTS
 )
 therock_cmake_subproject_glob_c_sources(hipBLAS-common
 SUBDIRS

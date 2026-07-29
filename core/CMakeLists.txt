@@ -82,13 +82,60 @@ if(THEROCK_ENABLE_CORE_AMDSMI)
       INTERFACE_INSTALL_RPATH_DIRS
         lib
       TEST_SUBPROJECTS
+        amd-dbgapi
+        aqlprofile
+        composable_kernel
+        hip-clr
+        hip-tests
         hipblas
+        hipblas-common
         hipblaslt
+        hipblasltprovider
+        hipcub
+        hipdnn
+        hipdnn_integration_tests
+        hipdnn_samples
+        hipfft
+        hipfile
+        hipkernelprovider
+        hiprand
+        hipsolver
+        hipsparse
+        hipsparselt
+        hiptensor
+        hipthreads
+        libhipcxx
+        miopen
+        miopenprovider
+        mxdatagenerator
         rccl
+        rccl-tests
         rdc
+        rocalution
         rocblas
+        rocdecode
+        rocfft
+        rocgdb
+        rocjpeg
+        rocprim
+        rocprim_tests
+        rocprof-trace-decoder
+        rocprofiler-compute
+        rocprofiler-sdk
         rocprofiler-systems
+        rocprofiler-systems-examples
+        rocr-debug-agent
+        rocr-debug-agent-tests
+        rocr-runtime
+        rocrand
+        rocroller
         rocrtst
+        rocshmem
+        rocsolver
+        rocsparse
+        rocthrust
+        roctracer
+        rocwmma
     )
 
     therock_cmake_subproject_provide_package(amdsmi amd_smi lib/cmake)
@@ -151,6 +198,7 @@ if(_therock_enable_hsa_runtime)
       "lib"
     INTERFACE_INSTALL_RPATH_DIRS
       "lib"
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(ROCR-Runtime
     SUBDIRS
@@ -319,6 +367,7 @@ if(THEROCK_ENABLE_HIP_RUNTIME)
       "lib"
     INTERFACE_INSTALL_RPATH_DIRS
       "lib"
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(hip-clr SUBDIRS .)
   therock_cmake_subproject_provide_package(hip-clr hip lib/cmake/hip)
@@ -596,6 +645,7 @@ if(THEROCK_BUILD_TESTING AND THEROCK_ENABLE_CORE_HIPTESTS)
     INTERFACE_INSTALL_RPATH_DIRS
       lib
       lib/rocm_sysdeps/lib
+    TEST_SUBPROJECTS
   )
   therock_cmake_subproject_glob_c_sources(hip-tests SUBDIRS .)
   therock_cmake_subproject_activate(hip-tests)
