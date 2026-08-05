@@ -77,6 +77,9 @@ test_include = [
 # no link-time edge, or real reverse edges absent from the forward deps).
 
 [component.rocm-core]
+# e2e testing: level 3 walks the full transitive consumer closure to validate
+# that whole-transitive selection triggers (3 direct -> ~52 transitive). Not for merge.
+level = 3
 test_include = ["rdc", "rocm_smi_lib", "roctracer"]
 
 [component.amdsmi]
