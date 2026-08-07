@@ -74,9 +74,7 @@ FULL_TEST_TRIGGER_PATTERNS = [
 # Set to non-empty string to override detected changes (e.g., "projects/rocprim")
 # TODO(geomin12): Remove this after testing cross-repo artifact reuse
 # =============================================================================
-_TEST_OVERRIDE_CHANGED_PROJECTS = os.environ.get(
-    "TEST_OVERRIDE_CHANGED_PROJECTS", ""
-)
+_TEST_OVERRIDE_CHANGED_PROJECTS = os.environ.get("TEST_OVERRIDE_CHANGED_PROJECTS", "")
 
 
 @dataclass
