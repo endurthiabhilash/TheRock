@@ -26,12 +26,22 @@ _DEFAULT_BUILD_DIR = Path(os.environ.get("THEROCK_BUILD_DIR", _REPO_ROOT / "buil
 
 def normalize(path: Path) -> str:
     """Return the graph as canonical JSON: sorted keys and consumer lists,
-    2-space indent, trailing newline. Used by both --check and --write."""
+    2-space indent, trailing newline. Used by both --check and --write.
+
+    `subtree_map` is a reserved top-level key (source subtree -> [graph keys]),
+    not a subproject node, so it is normalized separately: its outer keys and each
+    key list are sorted. It must be preserved here or --write would silently strip
+    it and --check would then pass against a mapless committed file."""
     graph = json.loads(path.read_text())
-    norm = {
+    subtree_map = graph.pop("subtree_map", None)
+    norm: dict = {
         key: {"consumers": sorted(graph[key].get("consumers", []))}
         for key in sorted(graph)
     }
+    if subtree_map is not None:
+        norm["subtree_map"] = {
+            subtree: sorted(keys) for subtree, keys in sorted(subtree_map.items())
+        }
     return json.dumps(norm, indent=2, sort_keys=True) + "\n"
 
 

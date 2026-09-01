@@ -38,9 +38,12 @@ SCRIPT = Path(__file__).parent.parent / "determine_rocm_test_dependencies.py"
 sys.path.insert(0, str(THEROCK_DIR / "test_tools"))
 
 from determine_rocm_test_dependencies import (  # noqa: E402
+    _load_consumer_graph,
+    _load_subtree_map,
     explain_component,
     get_subprojects_to_test,
     list_subprojects,
+    resolve_to_graph_keys,
     validate_policies,
 )
 
@@ -640,6 +643,134 @@ class TestListSubprojectsNoBuildDir(_FixtureTestCase):
         self.assertEqual(proc.returncode, 0, proc.stderr)
         names = json.loads(proc.stdout)
         self.assertEqual(set(names), set(_GRAPH.keys()))
+
+
+# ---------------------------------------------------------------------------
+# subtree_map resolution: external-repo subtree paths -> graph keys. This is the
+# layer the identifier-space contract above defers to the caller — here we prove
+# the CLI (via resolve_to_graph_keys) bridges it when the graph carries a
+# subtree_map. Covers fan-out, name-skew, shared/ and dnn-providers/ prefixes,
+# case-insensitivity, the removeprefix fallback, dedup, and the reserved-key
+# handling (subtree_map is not a subproject node).
+# ---------------------------------------------------------------------------
+_MAP_GRAPH = {
+    "hip-clr": {"consumers": ["rocblas"]},
+    "ocl-clr": {"consumers": []},
+    "composable_kernel": {"consumers": ["miopen"]},
+    "rocroller": {"consumers": ["hipblaslt"]},
+    "hipkernelprovider": {"consumers": []},
+    "rocblas": {"consumers": []},
+    "miopen": {"consumers": []},
+    "hipblaslt": {"consumers": []},
+    "subtree_map": {
+        # Fan-out: one subtree builds two keys.
+        "projects/clr": ["hip-clr", "ocl-clr"],
+        # Name-skew: subtree basename != graph key.
+        "projects/composablekernel": ["composable_kernel"],
+        # shared/ prefix (never stripped by the removeprefix fallback).
+        "shared/rocroller": ["rocroller"],
+        # dnn-providers/ prefix.
+        "dnn-providers/hip-kernel-provider": ["hipkernelprovider"],
+    },
+}
+
+
+class TestSubtreeMapResolution(unittest.TestCase):
+    def setUp(self) -> None:
+        self.root = _make_fixture(
+            graph=_MAP_GRAPH, policies="[component.hip-clr]\n"
+        )
+
+    def tearDown(self) -> None:
+        shutil.rmtree(self.root, ignore_errors=True)
+
+    def test_load_subtree_map_returns_committed_map(self) -> None:
+        mapping = _load_subtree_map(self.root)
+        self.assertEqual(mapping["projects/clr"], ["hip-clr", "ocl-clr"])
+        self.assertEqual(
+            mapping["dnn-providers/hip-kernel-provider"], ["hipkernelprovider"]
+        )
+
+    def test_subtree_map_is_not_a_subproject_node(self) -> None:
+        # _load_consumer_graph drops the reserved key so walks never treat it as a
+        # subproject, and list_subprojects must not surface it.
+        graph = _load_consumer_graph(self.root)
+        self.assertNotIn("subtree_map", graph)
+        self.assertNotIn("subtree_map", list_subprojects(self.root, show_deps=False))
+
+    def test_fan_out_expands_to_all_keys(self) -> None:
+        self.assertEqual(
+            resolve_to_graph_keys(["projects/clr"], self.root), ["hip-clr", "ocl-clr"]
+        )
+
+    def test_name_skew_resolves(self) -> None:
+        self.assertEqual(
+            resolve_to_graph_keys(["projects/composablekernel"], self.root),
+            ["composable_kernel"],
+        )
+
+    def test_shared_and_dnn_provider_prefixes_resolve(self) -> None:
+        self.assertEqual(
+            resolve_to_graph_keys(["shared/rocroller"], self.root), ["rocroller"]
+        )
+        self.assertEqual(
+            resolve_to_graph_keys(["dnn-providers/hip-kernel-provider"], self.root),
+            ["hipkernelprovider"],
+        )
+
+    def test_resolution_is_case_insensitive_on_subtree(self) -> None:
+        self.assertEqual(
+            resolve_to_graph_keys(["PROJECTS/CLR"], self.root), ["hip-clr", "ocl-clr"]
+        )
+
+    def test_unmapped_input_falls_back_to_removeprefix(self) -> None:
+        # Not in the map -> legacy removeprefix("projects/"). An input already
+        # holding a graph key passes through unchanged.
+        self.assertEqual(
+            resolve_to_graph_keys(["projects/amdsmi"], self.root), ["amdsmi"]
+        )
+        self.assertEqual(resolve_to_graph_keys(["hip-clr"], self.root), ["hip-clr"])
+
+    def test_result_is_deduped_preserving_order(self) -> None:
+        # projects/clr contributes [hip-clr, ocl-clr]; the trailing hip-clr (via
+        # fallback) is a duplicate and must be dropped without reordering.
+        self.assertEqual(
+            resolve_to_graph_keys(["projects/clr", "hip-clr"], self.root),
+            ["hip-clr", "ocl-clr"],
+        )
+
+    def test_mapless_graph_resolves_via_fallback_only(self) -> None:
+        # A graph predating the map (no subtree_map) must still resolve inputs by
+        # removeprefix, so the change is backward compatible.
+        mapless = _make_fixture()  # default _GRAPH has no subtree_map
+        try:
+            self.assertEqual(_load_subtree_map(mapless), {})
+            self.assertEqual(
+                resolve_to_graph_keys(["projects/amdsmi"], mapless), ["amdsmi"]
+            )
+        finally:
+            shutil.rmtree(mapless, ignore_errors=True)
+
+    def test_cli_selects_consumers_of_mapped_keys(self) -> None:
+        # End-to-end: projects/clr -> {hip-clr, ocl-clr}; at level 4 hip-clr also
+        # pulls its direct consumer rocblas.
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--therock-dir",
+                str(self.root),
+                "--changed-projects",
+                "projects/clr",
+                "--level",
+                "4",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        selected = set(json.loads(proc.stdout.strip()))
+        self.assertEqual(selected, {"hip-clr", "ocl-clr", "rocblas"})
 
 
 if __name__ == "__main__":
